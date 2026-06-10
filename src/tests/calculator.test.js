@@ -57,12 +57,59 @@ describe('Calculator functions', () => {
     });
   });
 
+  // Extended operations: modulo, power, square root
+  describe('modulo (mod)', () => {
+    test('modulo of 5 % 2 = 1', () => {
+      expect(calc.modulo(5, 2)).toBe(1);
+    });
+
+    test('modulo with negative numbers', () => {
+      expect(calc.modulo(-5, 2)).toBe(-1);
+    });
+
+    test('modulo by zero throws', () => {
+      expect(() => calc.modulo(5, 0)).toThrow(/Modulo by zero/);
+    });
+  });
+
+  describe('power (pow)', () => {
+    test('power 2^3 = 8', () => {
+      expect(calc.power(2, 3)).toBe(8);
+    });
+
+    test('power left-to-right for multiple operands (2^(3^2)) behavior', () => {
+      // Our implementation applies left-to-right: (2^3)^2 = 64
+      expect(calc.power(2, 3, 2)).toBe(Math.pow(Math.pow(2,3),2));
+    });
+
+    test('power with fractional exponent', () => {
+      expect(calc.power(9, 0.5)).toBeCloseTo(3);
+    });
+  });
+
+  describe('squareRoot (sqrt)', () => {
+    test('square root of 16 is 4', () => {
+      expect(calc.squareRoot(16)).toBe(4);
+    });
+
+    test('square root of 2 is ~1.414', () => {
+      expect(calc.squareRoot(2)).toBeCloseTo(Math.SQRT2);
+    });
+
+    test('square root of negative number throws', () => {
+      expect(() => calc.squareRoot(-4)).toThrow(/Square root of negative number/);
+    });
+  });
+
   describe('input validation', () => {
     test('invalid numeric input throws', () => {
       expect(() => calc.add('foo')).toThrow(/Invalid number/);
       expect(() => calc.subtract('bar')).toThrow(/Invalid number/);
       expect(() => calc.multiply('baz')).toThrow(/Invalid number/);
       expect(() => calc.divide('qux')).toThrow(/Invalid number/);
+      expect(() => calc.modulo('a', 'b')).toThrow(/Invalid number/);
+      expect(() => calc.power('x', 'y')).toThrow(/Invalid number/);
+      expect(() => calc.squareRoot('z')).toThrow(/Invalid number/);
     });
 
     test('no operands provided throws', () => {
@@ -70,6 +117,9 @@ describe('Calculator functions', () => {
       expect(() => calc.subtract()).toThrow(/At least one numeric operand is required/);
       expect(() => calc.multiply()).toThrow(/At least one numeric operand is required/);
       expect(() => calc.divide()).toThrow(/At least one numeric operand is required/);
+      expect(() => calc.modulo()).toThrow(/At least one numeric operand is required/);
+      expect(() => calc.power()).toThrow(/At least one numeric operand is required/);
+      expect(() => calc.squareRoot()).toThrow(/At least one numeric operand is required/);
     });
   });
 });

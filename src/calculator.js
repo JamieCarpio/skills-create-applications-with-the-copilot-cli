@@ -18,12 +18,12 @@
 
 // Helper: convert args to numbers and validate
 function toNumbers(args) {
+  if (!Array.isArray(args) || args.length === 0) throw new Error('At least one numeric operand is required');
   const nums = args.map(a => {
     const n = Number(a);
     if (Number.isNaN(n)) throw new Error(`Invalid number: ${a}`);
     return n;
   });
-  if (nums.length === 0) throw new Error('At least one numeric operand is required');
   return nums;
 }
 
@@ -57,8 +57,8 @@ function divide(...operands) {
 }
 
 // Modulo: remainder of a divided by b
-function modulo(a, b) {
-  const nums = toNumbers([a, b]);
+function modulo(...operands) {
+  const nums = toNumbers(operands);
   if (nums.length < 2) throw new Error('Modulo requires two operands');
   const [x, y] = nums;
   if (y === 0) throw new Error('Modulo by zero');
@@ -73,8 +73,9 @@ function power(...operands) {
 }
 
 // Square root: returns sqrt(n); error for negative numbers
-function squareRoot(n) {
-  const [num] = toNumbers([n]);
+function squareRoot(...operands) {
+  const nums = toNumbers(operands);
+  const num = nums[0];
   if (num < 0) throw new Error('Square root of negative number');
   return Math.sqrt(num);
 }
