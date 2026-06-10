@@ -56,10 +56,34 @@ function divide(...operands) {
   }, nums[0]);
 }
 
+// Modulo: remainder of a divided by b
+function modulo(a, b) {
+  const nums = toNumbers([a, b]);
+  if (nums.length < 2) throw new Error('Modulo requires two operands');
+  const [x, y] = nums;
+  if (y === 0) throw new Error('Modulo by zero');
+  return x % y;
+}
+
+// Power: base raised to exponent (left-to-right for multiple operands)
+function power(...operands) {
+  const nums = toNumbers(operands);
+  if (nums.length === 1) return nums[0];
+  return nums.slice(1).reduce((acc, n) => Math.pow(acc, n), nums[0]);
+}
+
+// Square root: returns sqrt(n); error for negative numbers
+function squareRoot(n) {
+  const [num] = toNumbers([n]);
+  if (num < 0) throw new Error('Square root of negative number');
+  return Math.sqrt(num);
+}
+
 // Minimal CLI parser
 function printUsage() {
   console.log('Usage: node src/calculator.js <operation> <num1> [num2 ...]');
-  console.log('Operations: add, subtract, multiply, divide');
+  console.log('Operations: add, subtract, multiply, divide, mod, pow, sqrt');
+  console.log('Aliases: mod=modulo, pow=power, sqrt=squareRoot');
 }
 
 if (require.main === module) {
@@ -84,6 +108,19 @@ if (require.main === module) {
       case 'divide':
         result = divide(...args);
         break;
+      case 'mod':
+      case 'modulo':
+        result = modulo(...args);
+        break;
+      case 'pow':
+      case 'power':
+        result = power(...args);
+        break;
+      case 'sqrt':
+      case 'squareroot':
+      case 'squareRoot':
+        result = squareRoot(...args);
+        break;
       case 'help':
       case '--help':
       case '-h':
@@ -103,4 +140,4 @@ if (require.main === module) {
 }
 
 // Export functions for programmatic use
-module.exports = { add, subtract, multiply, divide };
+module.exports = { add, subtract, multiply, divide, modulo, power, squareRoot };
